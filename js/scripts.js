@@ -1,3 +1,8 @@
+function renderHello() {
+  
+}
+
+renderHello();
 function uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
       var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -70,7 +75,7 @@ function semanticDataReceived(evt) {
 
 
 
-function loadSemanticData(snowmed_id,scope,databas,callback = function(){}) {
+function loadSemanticData(snowmed_id,scope,database,callback = function(){}) {
 
     console.log(snowmed_id+";"+scope);
     var query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
@@ -102,11 +107,28 @@ WHERE {\
     oReq.send("query=" + encodeURIComponent(query));
 }
 
-for( let semanticRoot of document.getElementsByClassName("semantic-root")){
-  var rootName=semanticRoot.getAttribute("id");
-  var rootURI=semanticRoot.getAttribute("rootURI");
-  var database=semanticRoot.getAttribute("database");
-  loadSemanticData(rootURI,rootName,database);
+for( let semanticRoot of document.getElementsByTagName("semantic-selector")){
+  var isSingleSemanticSelector=semanticRoot.hasAttribute("single");
+  if(isSingleSemanticSelector ){
+    var template="semantic-selector-single.mustache";
+  
+  
+  fetch(template)
+    .then((response) => response.text())
+    .then((template) => {
+      var rootName=semanticRoot.getAttribute("rootName");
+      var rootURI=semanticRoot.getAttribute("rootURI");
+      var database=semanticRoot.getAttribute("database");
+      var rendered = Mustache.render(template, { 
+                                                rootName: rootName,
+                                                rootURI:rootURI,
+                                                database:database
+                                              });
+      semanticRoot.innerHTML = rendered;    
+      loadSemanticData(rootURI,rootName,database);
+    });
+  }
+  
 }
 
 

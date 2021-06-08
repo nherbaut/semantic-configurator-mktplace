@@ -7,7 +7,7 @@
       <title>Cancer Image picker</title>
       <meta name="description" content="Cancer Image picker">
       <meta name="author" content="SitePoint">
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <link rel="stylesheet" href="contrib/css/bootstrap.min.css" >
 
       
       <link rel="stylesheet" href="css/styles.css">
@@ -16,7 +16,7 @@
 
     
       <div class="jumbotron">
-         <h1 class="display-4">Semantic Configurator Marketplace for Pizza Data</h1>
+         <h1 class="display-4">Semantic Configurator Marketplace for Cancer Data</h1>
          <p class="lead">Proof of concept for semantic matchmaking matchmarking for <a href="nextnet.top/files/SAIaaS:%20A%20Blockchain-based%20solution%20for%20secure%20artificial%20intelligence%20as-a-Service.pdf">Secure Artificial Intelligence as-a-service in DEEP-DBD 2021</a></p>
          <hr class="my-4">
          <p>Select the type of cancer and impacted Organ</p>
@@ -26,14 +26,12 @@
       
          <div class="container">
             <div class="row">
+                
                 <div class="col-sm">
                     <div class="form-group">
-                       
-                          
-                             <label  class="input-group-text" for="cancer-root">Choose Cancer:</label>
-                             <select class="semantic-root" id="cancer-root" database="https://sparql.nextnet.top/snowmedct" rootURI="http://snomed.info/id/108369006">
-                              <option value="">--any--</option>
-                           </select>
+                        <h2 class="display-5">Cancer properties</h2>
+                          <semantic-selector rootName="cancer" database="https://sparql.nextnet.top/snowmedct" rootURI="http://snomed.info/id/108369006" single></semantic-selector>
+                             
                           
                        </div>
                     
@@ -41,25 +39,26 @@
 
                  <div class="col-sm">
                     <div class="form-group">
-                       
-                          
-                             <label  class="input-group-text" for="organ-root">Choose Organ:</label>
-                             <select class="semantic-root" id="organ-root" database="https://sparql.nextnet.top/snowmedct" rootURI="http://snomed.info/id/38866009">
-                              <option value="">--any--</option>
-                           </select>
+                        <h2 class="display-5">Organ properties</h2>
+                        <semantic-selector rootName="organ" database="https://sparql.nextnet.top/snowmedct" rootURI="http://snomed.info/id/38866009" single></semantic-selector>
                           
                        </div>
                     
                  </div>
 
                  <div class="col-sm">
-                    <div class="form-group">
-                       
+                    <div class="form-group" style="border-width: 1; border-color: red;">
+                        <h2 class="display-5">Imaging properties</h2>
+                        <semantic-selector rootName="source of contrast" database="https://sparql.nextnet.top/fbbi" rootURI="http://purl.obolibrary.org/obo/FBbi_00000590" single></semantic-selector>
+                        <semantic-selector rootName="visualization method" database="https://sparql.nextnet.top/fbbi" rootURI="http://purl.obolibrary.org/obo/FBbi_00000031" single></semantic-selector>
+                        <semantic-selector rootName="imaging method" database="https://sparql.nextnet.top/fbbi" rootURI="http://purl.obolibrary.org/obo/FBbi_00000222" single></semantic-selector>
+                        <semantic-selector rootName="illumination method" database="https://sparql.nextnet.top/fbbi" rootURI="http://purl.obolibrary.org/obo/FBbi_00000268" single></semantic-selector>
+                        <semantic-selector rootName="detection method" database="https://sparql.nextnet.top/fbbi" rootURI="http://purl.obolibrary.org/obo/FBbi_00000269" single></semantic-selector>
+                        <semantic-selector rootName="imaged parameter" database="https://sparql.nextnet.top/fbbi" rootURI="http://purl.obolibrary.org/obo/FBbi_00000270" single></semantic-selector>
+                        <semantic-selector rootName="contrast-enhancing method" database="https://sparql.nextnet.top/fbbi" rootURI="http://purl.obolibrary.org/obo/FBbi_00000271" single></semantic-selector>
+                        <semantic-selector rootName="sample preparation method" database="https://sparql.nextnet.top/fbbi" rootURI="http://purl.obolibrary.org/obo/FBbi_00000001" single></semantic-selector>
+                        <semantic-selector rootName="resolution-enhancing method" database="https://sparql.nextnet.top/fbbi" rootURI="http://purl.obolibrary.org/obo/FBbi_00000321" single></semantic-selector>
                           
-                             <label  class="input-group-text" for="imaging-method-root">Choose Imaging Method:</label>
-                             <select class="semantic-root" id="imaging-method-root" database="https://sparql.nextnet.top/fbbi" rootURI="http://purl.obolibrary.org/obo/FBbi_root_00000000">
-                              <option value="">--any--</option>
-                           </select>
                           
                        </div>
                     
@@ -71,9 +70,10 @@
             </div>
          </div>
          
-
+<div id="target"></div>
         
-         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="contrib/js/bootstrap.min.js"></script>
+<script src="contrib/js/mustache.js"></script>
       <script src="js/scripts.js"></script>
       
    </body>
