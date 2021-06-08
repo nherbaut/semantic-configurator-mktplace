@@ -9,12 +9,16 @@ function uuidv4() {
 function onSelectChange(evt){
     evt.target.disabled=true;
     var uuid=evt.target.getAttribute("selectedChild");
+    var database=evt.target.getAttribute("database");
+    
   
     var child_select = document.getElementById(uuid);
     console.log(child_select);
+    var callback = function(){
     child_select.parentElement.style.display="block";
+    }
 
-    loadSemanticData(evt.target.selectedOptions[0].getAttribute("value"),uuid);
+    loadSemanticData(evt.target.selectedOptions[0].getAttribute("value"),uuid,database,callback);
 }
 
 function semanticDataReceived(evt) {
@@ -22,6 +26,10 @@ function semanticDataReceived(evt) {
     var response = JSON.parse(evt.target.response);
 
     var select = document.getElementById(evt.target.scope);
+
+    if( response["results"]["bindings"].length>0){
+      evt.target.callback();
+    }
 
     for (let match of response["results"]["bindings"]) {
         let element = document.createElement("option");
@@ -46,6 +54,8 @@ function semanticDataReceived(evt) {
     label.append("subtype");
     var newSelect = document.createElement("select");
     newSelect.setAttribute("id",uuid);
+    newSelect.setAttribute("database",evt.target.database);
+    
 
     var optionAny = document.createElement("option");
     optionAny.setAttribute("value","any");
@@ -60,7 +70,7 @@ function semanticDataReceived(evt) {
 
 
 
-function loadSemanticData(snowmed_id,scope) {
+function loadSemanticData(snowmed_id,scope,databas,callback = function(){}) {
 
     console.log(snowmed_id+";"+scope);
     var query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
@@ -82,13 +92,22 @@ WHERE {\
 }\
 ";
     var oReq = new XMLHttpRequest();
-    oReq.open("POST", "https://sparql.nextnet.top/snowmedct/query");
+    oReq.open("POST", database+"/query");
     oReq.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
     oReq.addEventListener("load", semanticDataReceived);
     oReq.scope=scope;
+    oReq.database=database;
+    oReq.callback=callback;
     oReq.send("query=" + encodeURIComponent(query));
 }
 
-loadSemanticData("http://snomed.info/id/108369006","cancer-root");
-loadSemanticData("http://snomed.info/id/38866009","organ-root");
+for( let semanticRoot of document.getElementsByClassName("semantic-root")){
+  var rootName=semanticRoot.getAttribute("id");
+  var rootURI=semanticRoot.getAttribute("rootURI");
+  var database=semanticRoot.getAttribute("database");
+  loadSemanticData(rootURI,rootName,database);
+}
+
+
+
