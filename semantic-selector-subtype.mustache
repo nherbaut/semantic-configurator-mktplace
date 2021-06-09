@@ -1,0 +1,10 @@
+<div style="display: block;">
+   <label for="{{ subtypeUUID }}">subtype</label>
+   <select id="{{ subtypeUUID }}" database="{{ database }}" selectedchild="{{ subsubtypeUUID}}">
+      <option value="">--any--</option>
+      {{#subConceptss}}
+      <option value="{{subConceptsURI}}" database="{{ database }}">{{ subConceptsDescription}}</option>
+      {{/subConceptss}}
+   </select>
+</div>
+

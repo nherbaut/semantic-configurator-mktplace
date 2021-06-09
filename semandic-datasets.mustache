@@ -1,0 +1,18 @@
+<div class="container-fluid">
+  <div class="row">
+    {{#datasets}}
+  <div class="col-sm d-flex justify-content-center">
+<div class="card" style="width: 15rem;">
+  <img class="card-img-top" src="img/dataset.png" alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">dataset</h5>
+    <p class="card-text">{{{id}}}</p>
+    <a href="{{{uri}}}.raw" class="btn btn-primary">Download</a>
+  </div>
+</div>
+</div>
+{{/datasets}}
+  </div>
+</div>
+
+

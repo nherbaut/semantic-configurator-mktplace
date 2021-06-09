@@ -1,14 +1,4 @@
-function renderHello() {
-  
-}
-
-renderHello();
-function uuidv4() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  }
+const sparqlBackend="https://sparql.nextnet.top/dummy"
 
 
 function onSelectChange(evt){
@@ -24,6 +14,8 @@ function onSelectChange(evt){
     }
 
     loadSemanticData(evt.target.selectedOptions[0].getAttribute("value"),uuid,database,callback);
+
+    
 }
 
 function semanticDataReceived(evt) {
@@ -40,6 +32,7 @@ function semanticDataReceived(evt) {
         let element = document.createElement("option");
         element.append(match["label"]["value"]);
         element.setAttribute("value", match["subject"]["value"]);
+        element.setAttribute("database", evt.target.database);
         select.append(element);
     }
   
@@ -47,7 +40,7 @@ function semanticDataReceived(evt) {
     var uuid = uuidv4();
     select.setAttribute("selectedChild",uuid);
 
-
+    //should be replaced by mustache template
     
     var div = document.createElement("div");
     var label = document.createElement("label");
@@ -63,8 +56,8 @@ function semanticDataReceived(evt) {
     
 
     var optionAny = document.createElement("option");
-    optionAny.setAttribute("value","any");
-    optionAny.append("any")
+    optionAny.setAttribute("value","");
+    optionAny.append("--any--")
 
     newSelect.append(optionAny);
     div.append(newSelect);
@@ -73,11 +66,27 @@ function semanticDataReceived(evt) {
 
 }
 
+function loadSemanticClassification(){
+  var semanticClassification = new Object();
+
+  for(let option of document.querySelectorAll('option')){
+    if(option.selected && option.value){
+      var rootURI = option.closest('semantic-selector').getAttribute("rooturi");
+      var selectedSubtype = option.value;
+      semanticClassification[rootURI]=selectedSubtype;
+    
+    
+    }
+  }
+
+    return semanticClassification;
+}
 
 
 function loadSemanticData(snowmed_id,scope,database,callback = function(){}) {
 
     console.log(snowmed_id+";"+scope);
+    //should be replaced by mustache template
     var query = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\
 PREFIX owl: <http://www.w3.org/2002/07/owl#>\
@@ -128,8 +137,69 @@ for( let semanticRoot of document.getElementsByTagName("semantic-selector")){
       loadSemanticData(rootURI,rootName,database);
     });
   }
+ 
+  
   
 }
 
+function getSemanticMatches(subclasses,callback=function(){}){
+fetch("sparql-semantic-query.mustache")
+.then((response) => response.text())
+.then((template) => {
+
+  var rendered = Mustache.render(template, { 
+                          subclasses: Object.values(subclasses),
+                          });
+                          console.log(rendered);
+   
+      fetch(sparqlBackend+"/query",{
+        method: "POST",
+        headers: {
+          
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        
+        body : "query="+encodeURIComponent(rendered)
+
+    }).then( success => success.json() )
+    .then(data => {
+        
+      var matchingDataSetURI = new Array();
+      for(let binding of data.results.bindings){
+        matchingDataSetURI.push( {uri:binding.uri.value,id:binding.subject.value});
+      }
+
+        
+        callback( matchingDataSetURI);
+        
+      })
+    .catch(
+      error => console.log(error) 
+    );
+});
+};
 
 
+
+function injectDataSetLinks(datasets){
+  fetch("semandic-datasets.mustache")
+.then((response) => response.text())
+.then((template) => {
+
+  var rendered = Mustache.render(template, { 
+              datasets: datasets,
+                          });
+  console.log(rendered);
+  document.getElementById("semandic-datasets").innerHTML=rendered;
+        
+
+                        })
+    .catch(
+      error => console.log(error) 
+    );
+
+}
+
+document.getElementById("getSemanticMatches").addEventListener("click",function(evt){
+  getSemanticMatches(loadSemanticClassification(),injectDataSetLinks);
+})

@@ -22,9 +22,12 @@
          <p>Select the type of cancer and impacted Organ</p>
          <img src="img/getty_rm_photo_of_lung_cancer.jpg" class="rounded mx-auto d-block"  alt="Responsive image">
       </div>
-     
+   
       
          <div class="container">
+           
+           
+         
             <div class="row">
                 
                 <div class="col-sm">
@@ -68,33 +71,35 @@
                  
                
             </div>
-         
-                
+
             <div class="row">
+            
+
                <div class="col-sm">
-                  <input id="getSemanticMatches" value="Get Semantic Matches" type="button">
-                  </div>
-
-               </div>
-
-              
                   
+                  <div class="form-group border border-primary">
+                   <label  class="input-group-text" for="dataset">Upload Dataset</label>
+                   <input id="dataset-file" type="file" />
+                   
+                  </div>
+               </div>
+                   
+                 
+                 
+                 
+                  
+         
               
-                     
-                     
-
+            </div>
          </div>
          
-         <div id="semandic-datasets"></div>     
-
-
-
-
+<div id="target"></div>
         
 <script src="contrib/js/bootstrap.min.js"></script>
 <script src="contrib/js/mustache.js"></script>
       <script src="js/helper.js"></script>
       <script src="js/scripts.js"></script>
+      <script src="js/drop.js"></script>
       
    </body>
 </html>
