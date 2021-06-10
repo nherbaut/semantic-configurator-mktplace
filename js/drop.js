@@ -46,7 +46,7 @@ const upload = (file) => {
           console.log(success); 
 
           alert('Your dataset has been submitted to the data store and its metadata to the semantic database');
-          window.location.href='/';
+          window.location.href='index.html';
         })
       .catch(
         error => console.log(error) 
