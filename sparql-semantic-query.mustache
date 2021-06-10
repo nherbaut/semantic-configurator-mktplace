@@ -9,7 +9,7 @@ SELECT ?subject ?uri
 WHERE {
     ?subject rdf:type owl:NamedIndividual.
     {{#subclasses}}
-    ?subject rdfs:subClassOf <{{{.}}}>.
+    ?subject rdfs:subClassOf* <{{{.}}}>.
     {{/subclasses}}
   
    ?subject saais:uri ?uri.
