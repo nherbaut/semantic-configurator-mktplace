@@ -73,7 +73,13 @@ function loadSemanticClassification(){
     if(option.selected && option.value){
       var rootURI = option.closest('semantic-selector').getAttribute("rooturi");
       var selectedSubtype = option.value;
-      semanticClassification[rootURI]=selectedSubtype;
+      if( rootURI in semanticClassification){
+        semanticClassification[rootURI].push(selectedSubtype);
+      }
+      else{
+        semanticClassification[rootURI]=[selectedSubtype];
+      }
+      
     
     
     }
@@ -147,8 +153,10 @@ fetch("sparql-semantic-query.mustache")
 .then((response) => response.text())
 .then((template) => {
 
+  var flatListSubclasses = getAllMatchingSubclasses(subclasses);
+
   var rendered = Mustache.render(template, { 
-                          subclasses: Object.values(subclasses),
+                          subclasses: flatListSubclasses,
                           });
                           console.log(rendered);
    
@@ -181,6 +189,16 @@ fetch("sparql-semantic-query.mustache")
 
 
 
+function getAllMatchingSubclasses(subclasses) {
+  var flatListSubclasses = new Array();
+  for (let subclassList of Object.values(subclasses)) {
+    for (let subclass of subclassList) {
+      flatListSubclasses.push(subclass);
+    }
+  }
+  return flatListSubclasses;
+}
+
 function injectDataSetLinks(datasets){
   fetch("semandic-datasets.mustache")
 .then((response) => response.text())
@@ -200,6 +218,3 @@ function injectDataSetLinks(datasets){
 
 }
 
-document.getElementById("getSemanticMatches").addEventListener("click",function(evt){
-  getSemanticMatches(loadSemanticClassification(),injectDataSetLinks);
-})

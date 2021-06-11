@@ -25,10 +25,11 @@ const upload = (file) => {
       
       var datasetId=uuid;
       var datasetURI=redisBackend+uuid;
+      var flatListSubclasses=getAllMatchingSubclasses(loadSemanticClassification());
       var rendered = Mustache.render(template, { 
         datasetId: datasetId,
         datasetURI:datasetURI,
-        subclasses:Object.values(loadSemanticClassification())
+        subclasses:flatListSubclasses
                                               });
 
       console.log("sending");
