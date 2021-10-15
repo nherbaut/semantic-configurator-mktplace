@@ -49,7 +49,7 @@ function semanticDataReceived(evt) {
 
     
     label.setAttribute("for",uuid);
-    label.append("subtype");
+    label.append("Select Sub-class");
     var newSelect = document.createElement("select");
     newSelect.setAttribute("id",uuid);
     newSelect.setAttribute("database",evt.target.database);
